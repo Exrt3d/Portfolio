@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Portfolio</title>
+  <style>
+    :root {
+      --bg: #0f172a;          /* slate-900 */
+      --panel: #111827;       /* gray-900 */
+      --panel-2: #1f2937;     /* gray-800 */
+      --text: #e5e7eb;        /* gray-200 */
+      --muted: #94a3b8;       /* slate-400 */
+      --brand: #6366f1;       /* indigo-500 */
+      --brand-strong: #4f46e5;/* indigo-600 */
+      --accent: #22d3ee;      /* cyan-400 */
+      --shadow: rgba(0,0,0,.35);
+      --border: #263042;      /* dark border */
+      --chip-bg: #0e1428;     /* dark chip/item bg */
+      --radius: 12px;
+      --header-h: 64px;
+    }
+    :root[data-theme="light"] {
+      --bg: #ffffff;          /* plain white */
+      --panel: #ffffff;       /* white */
+      --panel-2: #f9fafb;     /* gray-50 */
+      --text: #111827;        /* gray-900 */
+      --muted: #4b5563;       /* gray-600 */
+      --brand: #4f46e5;       /* indigo-600 */
+      --brand-strong: #4338ca;/* indigo-700 */
+      --accent: #0ea5e9;      /* sky-500 */
+      --shadow: rgba(0,0,0,.15);
+      --border: #e5e7eb;      /* light border */
+      --chip-bg: #f3f4f6;     /* light chip/item bg */
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* Header / Nav */
+    header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: color-mix(in srgb, var(--panel) 85%, transparent);
+      backdrop-filter: saturate(140%) blur(10px);
+      box-shadow: 0 2px 10px var(--shadow);
+      z-index: 1000;
+    }
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      font-weight: 700;
+      letter-spacing: .3px;
+    }
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      margin: 0 12px;
+      opacity: .9;
+    }
+    nav a:hover { color: var(--accent); }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--brand);
+      color: white;
+      border: 0;
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(99, 102, 241, .35);
+      transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
+    }
+    .btn:hover { background: var(--brand-strong); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); box-shadow: 0 2px 12px rgba(99, 102, 241, .4); }
+    .btn--pulse { animation: pulse 2.2s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 6px 20px rgba(99,102,241,.35); transform: translateY(0); }
+      50% { box-shadow: 0 10px 28px rgba(99,102,241,.55); transform: translateY(-1px); }
+    }
+
+    /* Sections */
+    main { padding-top: calc(var(--header-h) + 24px); }
+    section { scroll-margin-top: calc(var(--header-h) + 16px); }
+
+    /* Hero banner */
+    .hero {
+      position: relative;
+      min-height: 85vh;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('programming-background-with-person-working-with-codes-computer_23-2150010125.jpg') center/cover no-repeat;
+      filter: grayscale(40%);
+      z-index: -2;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,.35), rgba(0,0,0,.55));
+      z-index: -1;
+    }
+    .hero-inner { text-align: center; padding: 24px; }
+    .hero-title { font-size: 44px; margin: 0 0 12px; color: #ffffff; }
+    .hero-sub { color: #ffffff; opacity: .9; margin: 0 0 20px; }
+
+    /* About */
+    .about { min-height: calc(100vh - var(--header-h)); display: grid; place-items: center; padding: 24px 0; }
+    .about .container { display: flex; justify-content: center; align-items: center; width: 100%; }
+    .about-card {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 20px 60px var(--shadow);
+      max-width: 980px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 2000;
+    }
+    :root[data-theme="light"] .modal-backdrop { background: rgba(0,0,0,.3); }
+    .modal-backdrop[aria-hidden="false"] { display: flex; }
+    /* Modal open animations */
+    .modal-backdrop[aria-hidden="false"] { animation: modalFade .22s ease-out; }
+    .modal-backdrop[aria-hidden="false"] .modal { animation: modalZoom .24s ease-out; }
+    @keyframes modalFade { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes modalZoom { from { transform: translateY(12px) scale(.96); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+    .modal {
+      width: 100%;
+      max-width: 460px;
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 24px 80px var(--shadow);
+      overflow: hidden;
+      will-change: transform, opacity;
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-title { font-weight: 700; }
+    .icon-btn { background: transparent; border: 0; color: var(--text); opacity: .8; cursor: pointer; font-size: 20px; padding: 8px; }
+    .icon-btn:hover { opacity: 1; color: var(--accent); }
+    .modal-body { padding: 16px; }
+    .contact-row { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .contact-item { background: var(--chip-bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; color: var(--text); }
+    .contact-label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+    .contact-value { margin-top: 4px; font-size: 16px; }
+    .about-grid { display: grid; grid-template-columns: 360px 1fr; gap: 28px; align-items: center; }
+    .about-photo { width: 100%; border-radius: 999px; aspect-ratio: 1/1; object-fit: cover; }
+    .skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; padding-left: 18px; margin: 0; }
+    .skills li { color: var(--text); opacity: .9; }
+    h1 { margin: 0 0 12px; font-size: 42px; line-height: 1.15; }
+    .lead { color: var(--muted); max-width: 60ch; }
+
+    /* Portfolio grid */
+    .portfolio { min-height: calc(100vh - var(--header-h)); display: grid; place-items: center; padding: 24px 0; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+    .card {
+      grid-column: span 6;
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px var(--shadow); }
+    .thumb { aspect-ratio: 16/9; background: #0b1224; display: grid; place-items: center; color: var(--muted); font-weight: 600; font-size: 18px; }
+    :root[data-theme="light"] .thumb { background: #e5e7eb; }
+    .card-body { padding: 16px; }
+    .card-title { margin: 0 0 6px; font-size: 18px; }
+    .card-text { margin: 0; color: var(--muted); }
+
+    /* Footer */
+    footer { color: var(--muted); text-align: left; padding: 24px 0 48px; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .card { grid-column: span 12; }
+      h1 { font-size: 36px; }
+      .hero { min-height: 78vh; }
+      .hero-title { font-size: 36px; }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-card { padding: 20px; }
+    }
+    @media (max-width: 600px) {
+      .hero-title { font-size: 30px; }
+      .hero-sub { font-size: 14px; }
+    }
+    @media (min-width: 1200px) {
+      .hero-title { font-size: 56px; }
+      .hero-sub { font-size: 18px; }
+      .about-grid { grid-template-columns: 420px 1fr; gap: 32px; }
+      .grid { gap: 20px; }
+      .card { grid-column: span 4; }
+    }
+    @media (min-width: 1600px) {
+      .hero-title { font-size: 64px; }
+      .about-card { max-width: 1100px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="brand">My Portfolio</div>
+      <nav aria-label="Primary">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#portfolio">Portfolio</a>
+      </nav>
+      <div style="display:flex; gap:8px; align-items:center">
+        <button class="btn" id="themeToggle" aria-label="Toggle theme">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="hero-inner">
+        <h1 class="hero-title">Hello, I'm <span style="color:var(--accent)">Ethan Daniel Monterola</span></h1>
+        <p class="hero-sub">Aspiring Frontend Developer</p>
+        <button class="btn btn--pulse" id="hireMeBtnHero" aria-haspopup="dialog" aria-controls="contactModal">Hire Me</button>
+      </div>
+    </section>
+    <section id="about" class="about">
+      <div class="container">
+        <div class="about-card">
+          <div class="about-grid">
+            <img class="about-photo" src="emdon.png" alt="Portrait" />
+            <div class="about-content">
+              <h1>About Me</h1>
+              <p class="lead">Hi, I'm Ethan Daniel Monterola — a frontend developer focused on creating fast, accessible, and beautiful web experiences. I enjoy translating ideas into delightful interfaces and solving tricky UX problems with clean, maintainable code.</p>
+              <p class="lead">Outside of work, I explore new frameworks, design systems, and contribute to small open‑source tools. I'm available for freelance or full‑time opportunities.</p>
+              <div style="margin-top:12px">
+                <strong style="display:block; margin:0 0 8px">Skills</strong>
+                <ul class="skills">
+                  <li>HTML5 & CSS3</li>
+                  <li>JavaScript</li>
+                  <li>Responsive Design</li>
+                  <li>Accessibility</li>
+                  <li>React Basics</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="portfolio" class="portfolio">
+      <div class="container">
+        <div class="grid">
+          <article class="card">
+            <div class="thumb">Project 1</div>
+            <div class="card-body">
+              <h3 class="card-title">Landing Page Redesign</h3>
+              <p class="card-text">A responsive marketing page with A/B tested hero, 40% higher CTR.</p>
+            </div>
+          </article>
+          <article class="card">
+            <div class="thumb">Project 2</div>
+            <div class="card-body">
+              <h3 class="card-title">E‑commerce UI System</h3>
+              <p class="card-text">Component library for product, cart, and checkout flows.</p>
+            </div>
+          </article>
+          <article class="card">
+            <div class="thumb">Project 3</div>
+            <div class="card-body">
+              <h3 class="card-title">Analytics Dashboard</h3>
+              <p class="card-text">Interactive charts powered by lightweight data bindings.</p>
+            </div>
+          </article>
+          <article class="card">
+            <div class="thumb">Project 4</div>
+            <div class="card-body">
+              <h3 class="card-title">Mobile App Prototype</h3>
+              <p class="card-text">Cross‑platform prototype showcasing core journeys and UX.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact">
+    <div class="container" style="justify-content: flex-start; gap: 16px; flex-wrap: wrap">
+      <div>© <span id="year"></span> Your Name. All rights reserved.</div>
+      
+    </div>
+  </footer>
+  <!-- Contact Modal -->
+  <div class="modal-backdrop" id="contactModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document">
+      <div class="modal-header">
+        <div class="modal-title">Contact</div>
+        <button class="icon-btn" id="closeModalBtn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="contact-row">
+          <div class="contact-item">
+            <div class="contact-label">Phone</div>
+            <div class="contact-value"><a href="tel:09564952186" style="color:inherit; text-decoration:none">09564952186</a></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-label">Email</div>
+            <div class="contact-value"><a href="mailto:exrt3d@gmail.com" style="color:inherit; text-decoration:none">exrt3d@gmail.com</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button id="backToTop" class="btn" aria-label="Back to top" style="position:fixed; left:50%; bottom:24px; transform:translateX(-50%); z-index:1500; display:none;">Back to top</button>
+
+  <script>
+    // Year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+    // Theme init
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    const savedTheme = localStorage.getItem('theme');
+    const theme = savedTheme || (prefersLight ? 'light' : 'dark');
+    if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    const themeBtn = document.getElementById('themeToggle');
+    function setTheme(next) {
+      if (next === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        themeBtn.textContent = 'Dark';
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+        themeBtn.textContent = 'Light';
+      }
+    }
+    // Initialize button label
+    setTheme(theme);
+    themeBtn.addEventListener('click', () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      setTheme(isLight ? 'dark' : 'light');
+    });
+    // Modal logic
+    const modal = document.getElementById('contactModal');
+    const openBtns = [
+      document.getElementById('hireMeBtn'),
+      document.getElementById('hireMeBtnHero')
+    ].filter(Boolean);
+    const closeBtn = document.getElementById('closeModalBtn');
+
+    function openModal() {
+      modal.setAttribute('aria-hidden', 'false');
+      closeBtn && closeBtn.focus();
+      document.addEventListener('keydown', onKey);
+    }
+    function closeModal() {
+      modal.setAttribute('aria-hidden', 'true');
+      document.removeEventListener('keydown', onKey);
+    }
+    function onKey(e) { if (e.key === 'Escape') closeModal(); }
+    openBtns.forEach(btn => btn && btn.addEventListener('click', openModal));
+    closeBtn && closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+    // Back to top visibility and behavior
+    const backBtn = document.getElementById('backToTop');
+    function onScrollBackBtn() {
+      const threshold = (window.innerHeight || 800) * 0.6;
+      backBtn.style.display = window.scrollY > threshold ? 'inline-flex' : 'none';
+    }
+    window.addEventListener('scroll', onScrollBackBtn, { passive: true });
+    onScrollBackBtn();
+    backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+</body>
+</html>
+
+
